@@ -24,3 +24,8 @@ ansible-playbook cycle_passwd.yaml
 ```
 ansible-vault view ~/.secret-yaml-files/secret.yaml-2023-12-07-16.25.29 --vault-password-file ~/.vault_key
 ```
+
+# Reference
+- https://docs.ansible.com/ansible/latest/vault_guide/vault.html
+- https://docs.ansible.com/ansible/latest/collections/ansible/builtin/password_lookup.html
+- https://infotechys.com/write-a-play-that-changes-the-root-password-hash/
