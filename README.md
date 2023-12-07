@@ -1,8 +1,8 @@
 # CHANGE ROOT PASSWORD HASH AND STORED IT
 
 ## Khai báo các biến trong Ansible Playbook
-passwdDir: Khai báo vị trí lưu backup encrypt password sau mỗi lần chạy script
-vaultPass: Khai báo file lưu keypair sử dụng để mã hóa mật khẩu bằng ansible vault
+- passwdDir: Khai báo vị trí lưu backup encrypt password sau mỗi lần chạy script
+- vaultPass: Khai báo file lưu keypair sử dụng để mã hóa mật khẩu bằng ansible vault
 
 ## Mô tả các Tasks
 - Generate root password: Tạo mật khẩu ngẫu nhiên và lưu vào file secret.yaml
