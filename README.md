@@ -13,6 +13,12 @@
 - Get timestamp from the system: lấy giá trị thời gian trên hệ thống
 - Save password file to backup using timestamp: Thực hiện backup file lưu mật khẩu root hiện tại
 
+## Running Script
+
+```
+ansible-playbook cycle_passwd.yaml
+```
+
 ## Xem lại mật khẩu đã lưu trữ trước đó
 
 ```
