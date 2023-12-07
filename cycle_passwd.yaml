@@ -1,0 +1,47 @@
+---
+- name: Change root password and store it using ansible-vault
+  hosts: test-ansible
+  become: false
+ 
+  vars:
+    passwdDir: ~/.secret-yaml-files
+    vaultPass: ~/.vault_key
+    runningfromHost: localhost
+
+  tasks:
+  - name: Generate root password
+    set_fact:
+      rootPass: "{{ lookup('password', '{{ passwdDir }}/secret.yaml chars=ascii_letters,digits,punctuation') }}"
+
+  - debug:
+      var: rootPass 
+
+  - name: Check if secret.yaml file exists
+    stat:
+      path: "{{ passwdDir }}/secret.yaml"
+    register: stat_secrets
+    delegate_to: "{{ runningfromHost }}"
+
+  - name: Update root password hash
+    user:
+      name: root
+      password: "{{ newPass | password_hash('sha512') }}"
+    become: yes
+
+  - name: Encrypt password file using ansible-vault on {{ runningfromHost }}
+    ansible.builtin.command: ansible-vault encrypt {{ passwdDir }}/secret.yaml --vault-password-file {{ vaultPass }}
+    when: stat_secrets.stat.exists|bool == true
+    run_once: true
+    delegate_to: "{{ runningfromHost }}"
+
+  - name: Get timestamp from the system
+    ansible.builtin.command: "date +%Y-%m-%d-%H.%M.%S"
+    register: tstamp
+    run_once: true
+    delegate_to: "{{ runningfromHost }}"
+
+  - name: Save password file to backup using timestamp
+    ansible.builtin.command: mv {{ passwdDir }}/secret.yaml {{ passwdDir }}/secret.yaml-{{ tstamp.stdout }}      
+    when: stat_secrets.stat.exists|bool == true
+    run_once: true
+    delegate_to: "{{ runningfromHost }}"
