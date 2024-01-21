@@ -1,0 +1,21 @@
+---
+- name: Checking Host
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Ping hosts
+      ping: 
+
+    - name: Checking SSH on IP
+      wait_for:
+        hosts: "10.30.1.{{ item }}"
+        port: 22
+        timeout: 1
+        state: started
+      loop: "{{ range(2,254) | list }}"
+
+    - name: Show infomation
+      debug:
+        msg: "IP: 10.30.1.{{ item }} co the SSH"
+      when: "item is succeeded"
+      loop: "{{ range(2,254) | list }}"
