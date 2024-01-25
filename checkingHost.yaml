@@ -10,12 +10,20 @@
       wait_for:
         host: "10.30.1.{{ item }}"
         port: 22
-        timeout: 1
+        timeout: 5
         state: started
       loop: "{{ range(2,254) | list }}"
+      register: ssh_check_results
 
     - name: Show infomation
       debug:
         msg: "IP: 10.30.1.{{ item }} co the SSH"
       when: "item is succeeded"
       loop: "{{ range(2,254) | list }}"
+
+    - name: Write SSH reachable hosts to txt file
+      lineinfile:
+        path: hosts
+        line: "10.30.1.{{ item.item }}"
+      when: "item.stdout == '22' and item.elapsed <= 5"
+      loop: "{{ ssh_check_results.results }}"
